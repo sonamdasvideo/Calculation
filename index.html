@@ -4,31 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Math Quiz</title>
+    <title>Interactive Math Quiz</title>
 </head>
 <body>
-    <div id="rangeSelection" class="container">
-        <h1>Math Quiz: Multiplication, Square, and Cube</h1>
-        <h3>Select a range:</h3>
-        <select id="rangeSelect">
-            <option value="1-10">1-10</option>
-            <option value="11-20">11-20</option>
-            <option value="21-30">21-30</option>
-            <option value="31-40">31-40</option>
-            <option value="41-50">41-50</option>
-        </select>
-        <button id="startQuizBtn">Start Quiz</button>
-        <img src="https://via.placeholder.com/300.png?text=Math+Quiz" alt="Math Quiz" class="quiz-image">
-    </div>
+    <div class="container">
+        <div id="rangeSelection">
+            <h1>Select Range and Start Quiz</h1>
+            <label for="rangeSelect">Select range:</label>
+            <select id="rangeSelect">
+                <option value="1-10">1-10</option>
+                <option value="11-20">11-20</option>
+                <option value="21-30">21-30</option>
+            </select>
+            <button id="startQuizBtn">Start Quiz</button>
+        </div>
 
-    <div id="quizArea" class="container" style="display: none;">
-        <h2 id="question"></h2>
-        <ul id="options"></ul>
-        <button id="nextBtn">Next Question</button>
-        <div id="resultArea"></div>
-        <img src="https://via.placeholder.com/300.png?text=Good+Luck!" alt="Good Luck" class="quiz-image">
-    </div>
+        <div id="quizArea" style="display:none;">
+            <h2 id="question"></h2>
+            <ul id="options"></ul>
+            <div id="scoreBoard">
+                <p>Score: <span id="score">0</span></p>
+                <p>Correct: <span id="correctCount">0</span></p>
+                <p>Incorrect: <span id="incorrectCount">0</span></p>
+            </div>
+            <button id="endQuizBtn">End Quiz</button>
+        </div>
 
+        <div id="resultArea" style="display:none;"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
