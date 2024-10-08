@@ -1,91 +1,77 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background: url('https://www.transparenttextures.com/patterns/blue-linen.png');
-    color: #333;
-    text-align: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #e0f7fa;
+  text-align: center;
 }
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+h1 {
+  color: #00796b;
 }
 
-h1, h2 {
-    color: #0056b3;
+.page {
+  margin-top: 50px;
+}
+
+#rangeSelection select {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #00796b;
 }
 
 button {
-    background-color: #008cba;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background-color: #00796b;
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #005f8a;
+  background-color: #004d40;
 }
 
-.hidden {
-    display: none;
+#scoreBoard {
+  margin: 20px;
+  font-size: 18px;
 }
 
-.center-content {
-    text-align: center;
+#questionArea {
+  font-size: 24px;
+  margin: 30px;
 }
 
-.options-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+#optionsArea button {
+  display: inline-block;
+  margin: 10px;
+  padding: 15px;
+  font-size: 20px;
+  border-radius: 50px;
+  background-color: magenta;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.bubble {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: magenta;
-    color: white;
-    font-size: 18px;
-    line-height: 80px;
-    text-align: center;
-    margin: 10px;
-    cursor: pointer;
-    transition: background-color 0.5s, transform 0.5s;
+#optionsArea button:hover {
+  transform: scale(1.1);
 }
 
 .correct {
-    background-color: green !important;
+  background-color: green !important;
 }
 
 .wrong {
-    background-color: red !important;
+  background-color: red !important;
 }
 
-.scoreboard {
-    margin: 20px 0;
+#changeDifficulty, #retryQuizButton, #changeDifficultyEnd {
+  background-color: #f57c00;
 }
 
-.change-difficulty {
-    background-color: orange;
-}
-
-.contrast-text {
-    color: #000;
-}
-
-@media (max-width: 768px) {
-    .bubble {
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-    }
+#changeDifficulty:hover, #retryQuizButton:hover, #changeDifficultyEnd:hover {
+  background-color: #e65100;
 }
