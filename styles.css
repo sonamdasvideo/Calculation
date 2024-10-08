@@ -13,46 +13,55 @@ body {
 #rangeSelection {
     margin-bottom: 20px;
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
 }
 
 h1, h2 {
     color: #FFD700; /* Gold color */
+    text-shadow: 2px 2px 4px #000000; /* Shadow effect for fun */
 }
 
 button {
-    padding: 10px 20px;
+    background-color: #00BFFF; /* Deep Sky Blue */
     border: none;
     border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-}
-
-#startQuizBtn {
-    background-color: #4CAF50; /* Green */
-}
-
-#changeLevelBtn {
-    background-color: #FF9800; /* Orange */
-}
-
-.bubble {
-    display: inline-block;
-    background-color: #2196F3; /* Blue */
-    border-radius: 50%;
-    padding: 15px;
+    transition: background-color 0.3s, transform 0.3s;
     margin: 10px;
-    transition: background-color 0.3s;
 }
 
-.bubble.correct {
-    background-color: #4CAF50; /* Green */
+button:hover {
+    background-color: #1E90FF; /* Dodger Blue on hover */
+    transform: scale(1.05);
 }
 
-.bubble.wrong {
-    background-color: #F44336; /* Red */
+.option {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: magenta; /* Default bubble color */
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-#scoreboard {
+.option:hover {
+    transform: scale(1.1);
+}
+
+.correct {
+    background-color: #32CD32; /* Lime Green */
+}
+
+.wrong {
+    background-color: #FF6347; /* Tomato */
+}
+
+.scoreboard {
+    font-size: 18px;
     margin-top: 20px;
 }
