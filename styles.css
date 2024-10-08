@@ -1,67 +1,91 @@
 body {
-    font-family: Arial, sans-serif;
-    background-image: url('sea_background.jpg'); /* Add your sea background image */
-    background-size: cover;
-    color: white;
+    font-family: 'Arial', sans-serif;
+    background: url('https://www.transparenttextures.com/patterns/blue-linen.png');
+    color: #333;
+    text-align: center;
 }
 
 .container {
-    text-align: center;
-    margin-top: 50px;
-}
-
-#rangeSelection {
-    margin-bottom: 20px;
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 h1, h2 {
-    color: #FFD700; /* Gold color */
-    text-shadow: 2px 2px 4px #000000; /* Shadow effect for fun */
+    color: #0056b3;
 }
 
 button {
-    background-color: #00BFFF; /* Deep Sky Blue */
-    border: none;
-    border-radius: 5px;
+    background-color: #008cba;
     color: white;
+    border: none;
     padding: 10px 20px;
-    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    margin: 10px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #1E90FF; /* Dodger Blue on hover */
-    transform: scale(1.05);
+    background-color: #005f8a;
 }
 
-.option {
+.hidden {
+    display: none;
+}
+
+.center-content {
+    text-align: center;
+}
+
+.options-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.bubble {
     display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: magenta;
+    color: white;
+    font-size: 18px;
+    line-height: 80px;
+    text-align: center;
     margin: 10px;
-    padding: 10px;
-    border-radius: 20px;
     cursor: pointer;
-    background-color: magenta; /* Default bubble color */
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.option:hover {
-    transform: scale(1.1);
+    transition: background-color 0.5s, transform 0.5s;
 }
 
 .correct {
-    background-color: #32CD32; /* Lime Green */
+    background-color: green !important;
 }
 
 .wrong {
-    background-color: #FF6347; /* Tomato */
+    background-color: red !important;
 }
 
 .scoreboard {
-    font-size: 18px;
-    margin-top: 20px;
+    margin: 20px 0;
+}
+
+.change-difficulty {
+    background-color: orange;
+}
+
+.contrast-text {
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .bubble {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+    }
 }
