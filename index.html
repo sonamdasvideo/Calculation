@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz - Learn Multiplication, Squares & Cubes</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="heading">Welcome to the Fun Quiz!</h1>
-        <div id="range-selection" class="center-content">
-            <h2>Select Range:</h2>
-            <select id="difficulty">
-                <option value="10">1 - 10</option>
-                <option value="20">1 - 20</option>
-                <option value="30">1 - 30</option>
-                <option value="50">1 - 50</option>
-                <option value="100">1 - 100</option>
-                <option value="150">1 - 150</option>
-            </select>
-            <button id="start-quiz">Start Quiz</button>
-        </div>
-
-        <div id="quiz-area" class="hidden">
-            <h2 id="question" class="contrast-text"></h2>
-            <div id="options" class="options-container"></div>
-            <div id="scoreboard" class="scoreboard">
-                <h3>Live Score</h3>
-                <p id="live-score">Correct: 0 | Incorrect: 0</p>
-            </div>
-            <button id="change-difficulty" class="change-difficulty hidden">Change Difficulty</button>
-        </div>
+  <!-- Welcome Page -->
+  <div id="welcomePage" class="page">
+    <h1>Welcome to the Interactive Quiz!</h1>
+    <p>Select your range and start learning.</p>
+    <div id="rangeSelection">
+      <label for="range">Choose range:</label>
+      <select id="range">
+        <option value="10">1-10</option>
+        <option value="20">11-20</option>
+        <option value="30">21-30</option>
+        <option value="40">31-40</option>
+        <option value="50">41-50</option>
+        <option value="100">51-100</option>
+        <option value="150">101-150</option>
+      </select>
     </div>
+    <button id="startQuizButton">Start Quiz</button>
+  </div>
 
-    <script src="script.js"></script>
+  <!-- Quiz Page -->
+  <div id="quizPage" class="page" style="display: none;">
+    <h1>Answer the Question!</h1>
+    <div id="scoreBoard">
+      <p>Correct: <span id="correctScore">0</span></p>
+      <p>Wrong: <span id="wrongScore">0</span></p>
+    </div>
+    <div id="questionArea"></div>
+    <div id="optionsArea"></div>
+    <button id="changeDifficulty" style="display: none;">Change Difficulty</button>
+  </div>
+
+  <!-- End Page -->
+  <div id="endPage" class="page" style="display: none;">
+    <h1>Quiz Completed!</h1>
+    <p>Your Score: <span id="finalScore"></span></p>
+    <button id="retryQuizButton">Retry Quiz</button>
+    <button id="changeDifficultyEnd">Change Difficulty</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
