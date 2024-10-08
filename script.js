@@ -1,103 +1,111 @@
-let score = 0;
-let currentQuestionIndex = 0;
-let questions = [];
-let range = [1, 10]; // Default range
-
-document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
-document.getElementById('changeDifficultyBtn').addEventListener('click', changeDifficulty);
+let selectedDifficulty;
+let correctAnswer;
+let score = { correct: 0, incorrect: 0 };
+let startTime;
+let questionsAsked = [];
 
 function startQuiz() {
-    const selectedRange = document.getElementById('rangeSelect').value.split('-');
-    range = selectedRange.map(Number); // Convert range to numbers
-    generateQuestions();
-    document.getElementById('rangeSelection').style.display = 'none';
-    document.getElementById('quizSection').style.display = 'block';
-    showQuestion();
+    const selectedRange = document.querySelector('input[name="range"]:checked').value;
+    selectedDifficulty = parseInt(selectedRange);
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('quiz-page').style.display = 'block';
+    score.correct = 0;
+    score.incorrect = 0;
+    questionsAsked = [];
+    startTime = Date.now();
+    generateQuestion();
 }
 
-function generateQuestions() {
-    questions = [];
-    for (let i = range[0]; i <= range[1]; i++) {
-        questions.push({
-            question: `What is ${i} × ${i}?`,
-            correctAnswer: i * i,
-            options: generateOptions(i * i)
-        });
+function generateQuestion() {
+    const randomNumber1 = Math.floor(Math.random() * selectedDifficulty) + 1;
+    let randomNumber2;
+
+    // Ensure no repeated multiplication like 6x6
+    do {
+        randomNumber2 = Math.floor(Math.random() * selectedDifficulty) + 1;
+    } while (randomNumber1 === randomNumber2);
+
+    const questionType = Math.floor(Math.random() * 3); // 0 = multiplication, 1 = cube, 2 = square
+    let question;
+    
+    if (questionType === 0) {
+        question = `What is ${randomNumber1} x ${randomNumber2}?`;
+        correctAnswer = randomNumber1 * randomNumber2;
+    } else if (questionType === 1) {
+        question = `What is ${randomNumber1}^3?`;
+        correctAnswer = randomNumber1 * randomNumber1 * randomNumber1;
+    } else {
+        question = `What is the square of ${randomNumber1}?`;
+        correctAnswer = randomNumber1 * randomNumber1;
     }
-}
 
-function generateOptions(correctAnswer) {
-    const options = new Set([correctAnswer]);
-    while (options.size < 2) {
-        const wrongAnswer = Math.floor(Math.random() * (range[1] ** 2));
-        options.add(wrongAnswer);
+    // Ensure question is not repeated
+    if (questionsAsked.includes(question)) {
+        generateQuestion();
+        return;
     }
-    return Array.from(options);
+    questionsAsked.push(question);
+
+    document.getElementById('question').innerText = question;
+    setOptions(correctAnswer);
 }
 
-function showQuestion() {
-    const questionElement = document.getElementById('question');
-    const optionsElement = document.getElementById('options');
-    optionsElement.innerHTML = '';
-    questionElement.innerText = questions[currentQuestionIndex].question;
+function setOptions(correct) {
+    const wrongAnswer1 = correct + Math.floor(Math.random() * 10) + 1;
+    const wrongAnswer2 = correct - Math.floor(Math.random() * 10) - 1;
+    const allOptions = [correct, wrongAnswer1, wrongAnswer2].sort(() => Math.random() - 0.5);
 
-    questions[currentQuestionIndex].options.forEach(option => {
-        const optionDiv = document.createElement('div');
-        optionDiv.innerText = option;
-        optionDiv.className = 'option';
-        optionDiv.addEventListener('click', () => checkAnswer(option));
-        optionsElement.appendChild(optionDiv);
-    });
-
-    updateScoreboard();
-    document.getElementById('changeDifficultyBtn').style.display = 'block'; // Show button
+    document.getElementById('option1').innerText = allOptions[0];
+    document.getElementById('option2').innerText = allOptions[1];
+    document.getElementById('option3').innerText = allOptions[2];
 }
 
 function checkAnswer(selectedOption) {
-    const correctAnswer = questions[currentQuestionIndex].correctAnswer;
-    const options = document.getElementById('options').children;
-
-    for (let option of options) {
-        if (Number(option.innerText) === correctAnswer) {
-            option.classList.add('correct');
-        } else {
-            option.classList.add('wrong');
-        }
-        option.removeEventListener('click', () => checkAnswer(option.innerText)); // Disable further clicks
+    const userAnswer = parseInt(selectedOption.innerText);
+    if (userAnswer === correctAnswer) {
+        selectedOption.style.backgroundColor = 'green';
+        score.correct++;
+    } else {
+        selectedOption.style.backgroundColor = 'red';
+        score.incorrect++;
     }
 
-    if (selectedOption === correctAnswer) {
-        score++;
-    }
-    
-    currentQuestionIndex++;
-    
+    updateScoreBoard();
+
+    // Disable options after answer
+    document.getElementById('option1').disabled = true;
+    document.getElementById('option2').disabled = true;
+    document.getElementById('option3').disabled = true;
+
     setTimeout(() => {
-        if (currentQuestionIndex < questions.length) {
-            showQuestion();
-        } else {
-            endQuiz();
-        }
+        selectedOption.style.backgroundColor = '';
+        generateQuestion();
+        resetOptions();
     }, 1000);
 }
 
-function endQuiz() {
-    document.getElementById('quizSection').style.display = 'none';
-    document.getElementById('rangeSelection').style.display = 'block';
-    alert(`Quiz Ended! Your score is ${score} out of ${questions.length}`);
+function resetOptions() {
+    document.getElementById('option1').disabled = false;
+    document.getElementById('option2').disabled = false;
+    document.getElementById('option3').disabled = false;
+}
+
+function updateScoreBoard() {
+    document.getElementById('correct-score').innerText = `Correct: ${score.correct}`;
+    document.getElementById('incorrect-score').innerText = `Incorrect: ${score.incorrect}`;
 }
 
 function changeDifficulty() {
-    const newRange = prompt("Enter new range (e.g. 1-20):");
-    if (newRange) {
-        const [newStart, newEnd] = newRange.split('-').map(Number);
-        range = [newStart, newEnd];
-        generateQuestions();
-        currentQuestionIndex = 0;
-        showQuestion();
-    }
+    document.getElementById('quiz-page').style.display = 'none';
+    document.getElementById('start-page').style.display = 'block';
 }
 
-function updateScoreboard() {
-    document.getElementById('scoreboard').innerText = `Score: ${score}`;
-}
+document.getElementById('option1').addEventListener('click', function() {
+    checkAnswer(this);
+});
+document.getElementById('option2').addEventListener('click', function() {
+    checkAnswer(this);
+});
+document.getElementById('option3').addEventListener('click', function() {
+    checkAnswer(this);
+});
