@@ -1,111 +1,131 @@
-let selectedDifficulty;
-let correctAnswer;
-let score = { correct: 0, incorrect: 0 };
-let startTime;
-let questionsAsked = [];
+let correctScore = 0;
+let wrongScore = 0;
+let questionCount = 0;
+let range = 10;
+let usedQuestions = new Set();
+
+// Elements
+const welcomePage = document.getElementById('welcomePage');
+const quizPage = document.getElementById('quizPage');
+const endPage = document.getElementById('endPage');
+const questionArea = document.getElementById('questionArea');
+const optionsArea = document.getElementById('optionsArea');
+const correctScoreElement = document.getElementById('correctScore');
+const wrongScoreElement = document.getElementById('wrongScore');
+const finalScoreElement = document.getElementById('finalScore');
+const startQuizButton = document.getElementById('startQuizButton');
+const retryQuizButton = document.getElementById('retryQuizButton');
+const changeDifficultyButton = document.getElementById('changeDifficulty');
+const changeDifficultyEndButton = document.getElementById('changeDifficultyEnd');
+
+// Start Quiz
+startQuizButton.addEventListener('click', () => {
+  range = document.getElementById('range').value;
+  resetQuiz();
+  startQuiz();
+});
+
+retryQuizButton.addEventListener('click', () => {
+  resetQuiz();
+  startQuiz();
+});
+
+changeDifficultyButton.addEventListener('click', () => {
+  changeDifficulty();
+});
+
+changeDifficultyEndButton.addEventListener('click', () => {
+  changeDifficulty();
+});
+
+function resetQuiz() {
+  correctScore = 0;
+  wrongScore = 0;
+  questionCount = 0;
+  usedQuestions.clear();
+  correctScoreElement.textContent = correctScore;
+  wrongScoreElement.textContent = wrongScore;
+  endPage.style.display = 'none';
+}
 
 function startQuiz() {
-    const selectedRange = document.querySelector('input[name="range"]:checked').value;
-    selectedDifficulty = parseInt(selectedRange);
-    document.getElementById('start-page').style.display = 'none';
-    document.getElementById('quiz-page').style.display = 'block';
-    score.correct = 0;
-    score.incorrect = 0;
-    questionsAsked = [];
-    startTime = Date.now();
-    generateQuestion();
-}
-
-function generateQuestion() {
-    const randomNumber1 = Math.floor(Math.random() * selectedDifficulty) + 1;
-    let randomNumber2;
-
-    // Ensure no repeated multiplication like 6x6
-    do {
-        randomNumber2 = Math.floor(Math.random() * selectedDifficulty) + 1;
-    } while (randomNumber1 === randomNumber2);
-
-    const questionType = Math.floor(Math.random() * 3); // 0 = multiplication, 1 = cube, 2 = square
-    let question;
-    
-    if (questionType === 0) {
-        question = `What is ${randomNumber1} x ${randomNumber2}?`;
-        correctAnswer = randomNumber1 * randomNumber2;
-    } else if (questionType === 1) {
-        question = `What is ${randomNumber1}^3?`;
-        correctAnswer = randomNumber1 * randomNumber1 * randomNumber1;
-    } else {
-        question = `What is the square of ${randomNumber1}?`;
-        correctAnswer = randomNumber1 * randomNumber1;
-    }
-
-    // Ensure question is not repeated
-    if (questionsAsked.includes(question)) {
-        generateQuestion();
-        return;
-    }
-    questionsAsked.push(question);
-
-    document.getElementById('question').innerText = question;
-    setOptions(correctAnswer);
-}
-
-function setOptions(correct) {
-    const wrongAnswer1 = correct + Math.floor(Math.random() * 10) + 1;
-    const wrongAnswer2 = correct - Math.floor(Math.random() * 10) - 1;
-    const allOptions = [correct, wrongAnswer1, wrongAnswer2].sort(() => Math.random() - 0.5);
-
-    document.getElementById('option1').innerText = allOptions[0];
-    document.getElementById('option2').innerText = allOptions[1];
-    document.getElementById('option3').innerText = allOptions[2];
-}
-
-function checkAnswer(selectedOption) {
-    const userAnswer = parseInt(selectedOption.innerText);
-    if (userAnswer === correctAnswer) {
-        selectedOption.style.backgroundColor = 'green';
-        score.correct++;
-    } else {
-        selectedOption.style.backgroundColor = 'red';
-        score.incorrect++;
-    }
-
-    updateScoreBoard();
-
-    // Disable options after answer
-    document.getElementById('option1').disabled = true;
-    document.getElementById('option2').disabled = true;
-    document.getElementById('option3').disabled = true;
-
-    setTimeout(() => {
-        selectedOption.style.backgroundColor = '';
-        generateQuestion();
-        resetOptions();
-    }, 1000);
-}
-
-function resetOptions() {
-    document.getElementById('option1').disabled = false;
-    document.getElementById('option2').disabled = false;
-    document.getElementById('option3').disabled = false;
-}
-
-function updateScoreBoard() {
-    document.getElementById('correct-score').innerText = `Correct: ${score.correct}`;
-    document.getElementById('incorrect-score').innerText = `Incorrect: ${score.incorrect}`;
+  welcomePage.style.display = 'none';
+  quizPage.style.display = 'block';
+  askQuestion();
 }
 
 function changeDifficulty() {
-    document.getElementById('quiz-page').style.display = 'none';
-    document.getElementById('start-page').style.display = 'block';
+  quizPage.style.display = 'none';
+  endPage.style.display = 'none';
+  welcomePage.style.display = 'block';
 }
 
-document.getElementById('option1').addEventListener('click', function() {
-    checkAnswer(this);
-});
-document.getElementById('option2').addEventListener('click', function() {
-    checkAnswer(this);
-});
-document.getElementById('option3').addEventListener('click', function() {
-    checkAnswer(this);
-});
+function askQuestion() {
+  if (questionCount >= 10) {
+    endQuiz();
+    return;
+  }
+  
+  let num1 = getRandomNumber(1, range);
+  let num2 = getRandomNumber(1, range);
+  
+  while (usedQuestions.has(`${num1}-${num2}`)) {
+    num1 = getRandomNumber(1, range);
+    num2 = getRandomNumber(1, range);
+  }
+  
+  usedQuestions.add(`${num1}-${num2}`);
+  questionArea.textContent = `What is ${num1} x ${num2}?`;
+  
+  let correctAnswer = num1 * num2;
+  let wrongAnswer = correctAnswer + getRandomNumber(1, 10);
+  
+  let answers = shuffle([correctAnswer, wrongAnswer]);
+  
+  optionsArea.innerHTML = '';
+  answers.forEach((answer) => {
+    let optionButton = document.createElement('button');
+    optionButton.textContent = answer;
+    optionButton.classList.add('option');
+    optionButton.style.backgroundColor = 'magenta';
+    
+    optionButton.addEventListener('click', () => {
+      if (answer === correctAnswer) {
+        optionButton.classList.add('correct');
+        correctScore++;
+      } else {
+        optionButton.classList.add('wrong');
+        wrongScore++;
+      }
+      updateScore();
+      setTimeout(askQuestion, 1000);
+    });
+    
+    optionsArea.appendChild(optionButton);
+  });
+  
+  questionCount++;
+}
+
+function updateScore() {
+  correctScoreElement.textContent = correctScore;
+  wrongScoreElement.textContent = wrongScore;
+}
+
+function endQuiz() {
+  quizPage.style.display = 'none';
+  endPage.style.display = 'block';
+  finalScoreElement.textContent = `${correctScore} out of 10`;
+}
+
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
