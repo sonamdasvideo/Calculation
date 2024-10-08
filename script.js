@@ -1,6 +1,13 @@
 let currentQuestion;
 let score = 0;
+let correctCount = 0;
+let incorrectCount = 0;
 let totalQuestions = 5; // Set the number of questions per quiz
+let questionsHistory = []; // Store questions history
+
+// Load sound effects
+const correctSound = new Audio('correct-sound.mp3'); // Path to correct answer sound
+const incorrectSound = new Audio('incorrect-sound.mp3'); // Path to incorrect answer sound
 
 document.getElementById('startQuizBtn').addEventListener('click', function() {
     const selectedRange = document.getElementById('rangeSelect').value.split('-');
@@ -12,9 +19,25 @@ document.getElementById('startQuizBtn').addEventListener('click', function() {
     document.getElementById('quizArea').style.display = 'block';
     document.getElementById('resultArea').innerHTML = '';
     score = 0;
+    correctCount = 0;
+    incorrectCount = 0;
+    
+    updateScoreBoard(); // Update score board
 
     // Start the quiz
     nextQuestion(min, max);
+});
+
+// Function to update the score board
+function updateScoreBoard() {
+    document.getElementById('score').innerText = score;
+    document.getElementById('correctCount').innerText = correctCount;
+    document.getElementById('incorrectCount').innerText = incorrectCount;
+}
+
+document.getElementById('endQuizBtn').addEventListener('click', function() {
+    // Show results and reset the game
+    showResults();
 });
 
 function nextQuestion(min, max) {
@@ -50,6 +73,9 @@ function nextQuestion(min, max) {
     const options = [correctAnswer, ...wrongAnswers];
     options.sort(() => Math.random() - 0.5); // Shuffle options
 
+    // Store the current question history
+    questionsHistory.push({ question: questionText, correctAnswer: correctAnswer });
+
     // Display question and options
     document.getElementById('question').innerHTML = questionText;
     const optionsList = document.getElementById('options');
@@ -57,24 +83,56 @@ function nextQuestion(min, max) {
     
     options.forEach(option => {
         const li = document.createElement('li');
-        li.innerHTML = `<button class="option">${option}</button>`;
+        li.innerHTML = `<div class="option">${option}</div>`;
         optionsList.appendChild(li);
     });
     
     // Add click event to each option
-    const optionButtons = document.querySelectorAll('.option');
-    optionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (parseInt(this.innerHTML) === correctAnswer) {
+    const optionBubbles = document.querySelectorAll('.option');
+    optionBubbles.forEach(bubble => {
+        bubble.addEventListener('click', function() {
+            const selectedAnswer = parseInt(this.innerHTML);
+            const correctBubble = this;
+
+            if (selectedAnswer === correctAnswer) {
                 score++;
-                alert('Correct!');
+                correctCount++;
+                correctSound.play(); // Play correct sound
+                correctBubble.classList.add('green'); // Change to green for correct answer
             } else {
-                alert(`Wrong! The correct answer was ${correctAnswer}.`);
+                incorrectSound.play(); // Play incorrect sound
+                correctBubble.classList.add('red'); // Change to red for wrong answer
+                incorrectCount++;
             }
-            document.getElementById('resultArea').innerHTML = `Score: ${score}/${totalQuestions}`;
-            nextQuestion(min, max); // Load next question
+            
+            updateScoreBoard(); // Update score board
+            
+            // Change all options to be unclickable
+            optionBubbles.forEach(option => option.style.pointerEvents = 'none');
+            
+            // Load next question after a short delay
+            setTimeout(() => {
+                nextQuestion(min, max); // Load next question
+            }, 1000); // Adjust time as needed
         });
     });
 }
 
-// Optional: You can reset the quiz or add more features as needed
+function showResults() {
+    // Hide quiz area and display results
+    document.getElementById('quizArea').style.display = 'none';
+    const resultArea = document.getElementById('resultArea');
+    resultArea.style.display = 'block';
+
+    let resultHTML = `<h2>Quiz Summary</h2>`;
+    resultHTML += `<p>Total Score: ${score}</p>`;
+    resultHTML += `<p>Correct Answers: ${correctCount}</p>`;
+    resultHTML += `<p>Incorrect Answers: ${incorrectCount}</p>`;
+    
+    questionsHistory.forEach((item, index) => {
+        resultHTML += `<p>Question ${index + 1}: ${item.question}<br>
+                       Correct Answer: ${item.correctAnswer}</p>`;
+    });
+
+    resultArea.innerHTML = resultHTML;
+}
